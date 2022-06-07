@@ -44,7 +44,7 @@ def delete(request):
 #    object.save()
 #    return HttpResponse(status=200)
 
-def chage(request):
+def change(request):
     if int(request.POST['position'])>=int(request.POST['new_position']):
         object = Project.objects.filter(position=int(request.POST['position']))[0]
         object2 = Project.objects.filter(position__lt=int(request.POST['position']), position__gte=int(request.POST['new_position']))
