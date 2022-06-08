@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+
+<html>
+    <head>
+        {% load static %}
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" href="{% static 'css/styles.css' %}" type="text/css"/>
+        <title> Конференция </title>
+        <link rel="icon" type="image/x-icon" href="Силаэдр_фон.png">
+    </head>
+    <body>
+        <h1> Расписание </h1>
+        
+        <script type="text/javascript">
+            function setName(id){
+                var url = "dikiray.com/project/";
+                var http = new XMLHttpRequest();
+                http.open("GET", url+id, true);
+                http.send(null);
+                var response = http.responseText;
+                var jsonObject = JSON.parse(response);
+                var button = document.getElementById(id);
+                button.value = jsonObject.authors+": "+jsonObject.name;
+            }
+        </script>
+        <canvas class="rectangle2" id="myCanvas" style="border:3px solid #000000;"> </canvas>
+        <canvas class="rectangle" id="myCanvas" style="border:3px solid #000000;"> </canvas>
+        <div class="layer">
+            <div id="projects"> 
+            {% for project in projects %}
+            <a href="viewer?id={{project.id}}" class="floating-button" id={{project.id}}></a>
+            <div></div>
+            <script type="text/javascript">setName({{project.id}});</script>
+            {% endfor %}
+            </div>
+            <script type="text/javascript">
+                function getAllProjects(){
+                    var url = "dikiray.com/projects";
+                    var http = new XMLHttpRequest();
+                    http.open("GET", url, true);
+                    http.send(null);
+                    var response = http.responseText;
+                    var projects = JSON.parse(response);
+                    var datalist = document.getElementById(datalist);
+                    for(var i=0; i<projects.length; i++){
+                        var tag = document.createElement("option");
+                        tag.setAttribute("value", projects[i].authors+": "+projects[i].name);
+                        datalist.appendChild(tag);
+                    }
+                }
+                getAllProjects();
+            </script>
+            <input class="words" placeholder="Введите имя докладчика" list="names" name="names" type="text" id="fnames">
+            <datalist id="names">
+            </datalist>
+            <input class="submit" type="submit" value="Сохранить">
+        </div>
+        
+        
+    </body>
+</html>

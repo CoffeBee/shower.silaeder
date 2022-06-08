@@ -1,0 +1,100 @@
+body {
+    background-color:rgb(255, 246, 214);
+  }
+  h1 {
+    font-family: verdana;
+    font-size: 300%;
+    margin: 50px 60px;
+  }
+  .floating-button {
+    text-decoration: none;
+    display: inline-block;
+    width: 500px;
+    height: 45px;
+    line-height: 45px;
+    border-radius: 45px;
+    margin: 10px 50px;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 11px;
+    text-transform: uppercase;
+    text-align: center;
+    letter-spacing: 1px;
+    font-weight: 700;
+    color: #524f4e;
+    background: white;
+    box-shadow: 0 8px 15px rgba(0, 0, 0, .1);
+    transition: .3s;
+    cursor: move;
+  }
+  .floating-button:hover {
+    background: white;
+    box-shadow: 0 15px 20px #ffe77c66;
+    color: black;
+    transform: translateY(+7px);
+  }
+
+
+
+  .words {
+   
+    padding: 20px;
+    line-height: 45px;
+    width: 455px;
+    height: 20px;
+    border-radius: 20px;
+    margin: 20px 50px;
+    font-family: 'Montserrat', sans-serif;
+    text-align: center;
+    color: #908e8e;
+    letter-spacing: 1px;
+  }
+
+ 
+
+  .submit {
+    text-decoration: none;
+    display: inline-block;
+    width: 100px;
+    height: 45px;
+    line-height: 45px;
+    border-radius: 45px;
+    margin: -300px 250px;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 9px;
+    text-transform: uppercase;
+    text-align: center;
+    letter-spacing: 3px;
+    font-weight: 700;
+    color: #524f4e;
+    background: white;
+    box-shadow: 0 8px 15px #ffda8f6f;
+    transition: .3s;
+    letter-spacing: 1px;
+  }
+  .submit:hover {
+    background: white;
+    box-shadow: 0 5px 20px #ffe77c66;
+    color: black;
+  }
+
+  .rectangle {
+    width: 400px;
+    height: 200px;
+    margin: calc(-50vh + 300px ) 50vw;
+  }
+
+  .rectangle2 {
+    width: 400px;
+    height: 200px;
+    margin: calc(-50vh ) 50vw;
+  }
+
+  .layer {
+    overflow: auto; /* Добавляем полосы прокрутки */
+    width: 50vw; /* Ширина блока */
+    height: 100vh; /* Высота блока */
+    padding: 5px; /* Поля вокруг текста */
+    margin: -40px 30px;
+   } 
+
+  
