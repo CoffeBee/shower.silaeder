@@ -24,13 +24,21 @@ body {
     background: white;
     box-shadow: 0 8px 15px rgba(0, 0, 0, .1);
     transition: .3s;
-    cursor: move;
   }
-  .floating-button:hover {
+/*  .floating-button:hover {
     background: white;
     box-shadow: 0 15px 20px #ffe77c66;
     color: black;
     transform: translateY(+7px);
+  }*/
+  .project__item{
+    cursor: move;
+    list-style-type: none;
+  }
+  .projects__list{
+    padding-left: 0;
+
+
   }
 
 
