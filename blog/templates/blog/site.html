@@ -1,45 +1,57 @@
 <!DOCTYPE html>
-
 <html>
-    <head>
-        {% load static %}
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <link rel="stylesheet" href="{% static 'css/styles.css' %}" type="text/css"/>
-        <title> Конференция </title>
-        <link rel="icon" type="image/x-icon" href="Силаэдр_фон.png">
-    </head>
-    <body>
-        <h1> Расписание </h1>
-        
-        <script type="text/javascript">
-            function setName(id){
-                var url = "dikiray.com/project/";
-                var http = new XMLHttpRequest();
-                http.open("GET", url+id, true);
-                http.send(null);
-                var response = http.responseText;
-                var jsonObject = JSON.parse(response);
-                var button = document.getElementById(id);
-                button.value = jsonObject.authors+": "+jsonObject.name;
-            }
-        </script>
-        <canvas class="rectangle2" id="myCanvas" style="border:3px solid #000000;"> </canvas>
-        <canvas class="rectangle" id="myCanvas" style="border:3px solid #000000;"> </canvas>
-       
-        <div class="layer">
-            <section class="projects__section">
-                <div class="projects__list"> 
-                    {% for project in projects %}
-                            <a href="viewer?id={{project.id}}" class="floating-button projects__item" id={{project.id}}>
-                                {{project.id}}
-                            </a>
-                            <!-- {{project.id}} -->
-                            <!-- <div></div> -->
-                        <script type="text/javascript">setName({{project.id}});</script>
-                    {% endfor %}
-                </div>
-            </section>
-             <script type="text/javascript">
+   <head>
+      {% load static %}
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <link rel="stylesheet" href="{% static 'css/styles.css' %}" type="text/css"/>
+      <title> Конференция </title>
+      <link rel="icon" type="image/x-icon" href="Силаэдр_фон.png">
+   </head>
+   <body>
+      <h1> Расписание </h1>
+      <script type="text/javascript">
+         function setName(id){
+             var url = "http://ctf.djambek.com:9090/project?id=";
+             var http = new XMLHttpRequest();
+             http.open("GET", url+id, true);
+         
+             http.onload = function () {
+                   if (http.readyState === http.DONE) {
+                       if (http.status === 200) {
+                           // console.log(http.response);
+                           console.log(id);
+                           console.log(http.responseText);
+                           var response = http.responseText;
+                           var jsonObject = JSON.parse(response);
+                           var button = document.getElementById(id);
+                           button.innerHTML = jsonObject.autors+": "+jsonObject.name;
+                       }
+                   }
+               };
+         
+             http.send(null);
+         
+             // var response = http.responseText;
+             
+         }
+      </script>
+      <canvas class="rectangle2" id="myCanvas" style="border:3px solid #000000;"> </canvas>
+      <canvas class="rectangle" id="myCanvas" style="border:3px solid #000000;"> </canvas>
+      <div class="layer">
+         <section class="projects__section">
+            <div class="projects__list">
+               {% for project in projects %}
+               <a href="viewer?id={{project.id}}" class="floating-button projects__item" id="{{project.id}}">
+                    <!-- <img width="20" class="cross" height="20" src="{% static 'images/result.png' %}" alt="Удалить" onclick="alert(1);"> </a> -->
+
+               </a>
+               <!-- {{project.id}} -->
+               <!-- <div></div> -->
+               <script type="text/javascript">setName({{project.id}});</script>
+               {% endfor %}
+            </div>
+         </section>
+         <script type="text/javascript">
             const projectsListElement = document.querySelector(`.projects__list`);
             const projectElements = projectsListElement.querySelectorAll(`.projects__item`);
             for (const task of projectElements) {
@@ -51,47 +63,47 @@
             projectsListElement.addEventListener(`dragend`, (evt) => {
                 evt.target.classList.remove(`selected`);
             });
-
+            
             const getNextElement = (cursorPosition, currentElement) => {
               // Получаем объект с размерами и координатами
               const currentElementCoord = currentElement.getBoundingClientRect();
               // Находим вертикальную координату центра текущего элемента
               const currentElementCenter = currentElementCoord.y + currentElementCoord.height / 2;
-
+            
               // Если курсор выше центра элемента, возвращаем текущий элемент
               // В ином случае — следующий DOM-элемент
               const nextElement = (cursorPosition < currentElementCenter) ?
                   currentElement :
                   currentElement.nextElementSibling;
-
+            
               return nextElement;
             };
-
+            
             function positionChanged(id, position, new_position){
                 var http = new XMLHttpRequest();
                 var url = window.location.origin+"change";
                 var params = "id="+id+"&position="+position+"&new_position="+new_position;
-                http.open('POST', url, true);
+                http.open('GET', url+"?"+params, true);
                 http.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
-                http.send(params);
+                http.send(null);
             }
-
+            
             projectsListElement.addEventListener(`dragover`, (evt) => {
                   evt.preventDefault();
-
+            
                   const activeElement = projectsListElement.querySelector(`.selected`);
                   const currentElement = evt.target;
                   const isMoveable = activeElement !== currentElement &&
                     currentElement.classList.contains(`projects__item`);
-
+            
                   if (!isMoveable) {
                     return;
                   }
-
+            
                   // evt.clientY — вертикальная координата курсора в момент,
                   // когда сработало событие
                   const nextElement = getNextElement(evt.clientY, currentElement);
-
+            
                   // Проверяем, нужно ли менять элементы местами
                   if (
                     nextElement && 
@@ -106,38 +118,87 @@
                   console.log(nextElement);
                   console.log()
                   console.log("------------")
-
+            
                   projectElements[0].parentNode.insertBefore(activeElement, nextElement);
             });
+            
+            
+            
+         </script>
+         <script type="text/javascript">
+            function getAllProjects(){
+                var url = "http://ctf.djambek.com:9090/projects";
+                var http = new XMLHttpRequest();
+                http.open("GET", url, true);
+            
+                http.onload = function () {
+                  if (http.readyState === http.DONE) {
+                      if (http.status === 200) {
+                          // console.log(http.response);
+                          var added = [];
+                          var proj_tags = document.getElementsByClassName("floating-button projects__item");
+                          for (var i=0; i<proj_tags.length; i++){
+                            added[i] = proj_tags[i].innerHTML;
+                          }
 
 
 
-        </script>
-
-            <script type="text/javascript">
-                function getAllProjects(){
-                    var url = "dikiray.com/projects";
-                    var http = new XMLHttpRequest();
-                    http.open("GET", url, true);
-                    http.send(null);
-                    var response = http.responseText;
-                    var projects = JSON.parse(response);
-                    var datalist = document.getElementById(datalist);
-                    for(var i=0; i<projects.length; i++){
-                        var tag = document.createElement("option");
-                        tag.setAttribute("value", projects[i].authors+": "+projects[i].name);
-                        datalist.appendChild(tag);
-                    }
-                }
-                getAllProjects();
-            </script>
-
-            <input class="words" placeholder="Введите имя докладчика" list="names" name="names" type="text" id="fnames">
-            <datalist id="names">
-            </datalist>
-            <input class="submit" type="submit" value="Сохранить">
-        </div>
-        
-        
-    </body>
+                          console.log(http.responseText);
+                          var response = http.responseText;
+                          var projects = JSON.parse(response);
+                          var datalist = document.getElementById("names");
+                          for(var i=0; i<projects.length; i++){
+                              if(!added.includes(projects[i].autors+": "+projects[i].name)){
+                                  var tag = document.createElement("option");
+                                  tag.setAttribute("value", projects[i].autors+": "+projects[i].name);
+                                  tag.setAttribute("id", projects[i].id);
+                                  datalist.appendChild(tag);
+                              }
+                            }
+                          }
+                  }
+              };
+            
+            
+                http.send(null);
+                
+            }
+            getAllProjects();
+         </script>
+         <input class="words" placeholder="Введите имя докладчика" list="names" name="names" type="text" id="fnames">
+         <datalist id="names">
+         </datalist>
+         <button class="submit" type="submit" onclick="save();">Сохранить</button>
+      </div>
+      <script type="text/javascript">
+         function save(){
+           var input_text = document.getElementById("fnames").value;
+           var opts = document.getElementById("names").childNodes;
+           for (var i=0; i<opts.length; i++){
+             if (opts[i].value == input_text){
+               var id = opts[i].getAttribute("id");
+               break;
+             }
+           }
+           var http = new XMLHttpRequest();
+           var url = window.location.origin+"/add";
+           var params = "id="+id;
+           console.log(url);
+           console.log(params);
+           http.open('POST', url, true);
+           http.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+           http.onload = function () {
+                     if (http.readyState === http.DONE) {
+                         if (http.status === 500) {
+                           alert("Проект уже добавлен или вы добавляете пустую строку")
+                         }else{
+                            location.reload();
+               }
+                       }
+                     }
+           http.send(params);
+           
+         }
+      </script>
+   </body>
 </html>

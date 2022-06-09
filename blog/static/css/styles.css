@@ -37,9 +37,16 @@ body {
   }
   .projects__list{
     padding-left: 0;
-
-
   }
+
+  .krestik {
+    position: relative;
+    width: 28px;
+    height: 28px;
+    top: 18%;
+    right: -38%;
+   }
+
 
 
 
@@ -99,10 +106,12 @@ body {
 
   .layer {
     overflow: auto; /* Добавляем полосы прокрутки */
-    width: 50vw; /* Ширина блока */
-    height: 100vh; /* Высота блока */
+    width: 600px; /* Ширина блока */
+    height: 400px; /* Высота блока */
     padding: 5px; /* Поля вокруг текста */
     margin: -40px 30px;
+    border-radius: 45px;
+    overflow-x: hidden;
    } 
 
   
