@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html>
    <head>
@@ -5,7 +6,7 @@
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
       <link rel="stylesheet" href="{% static 'css/styles.css' %}" type="text/css"/>
       <title> Конференция </title>
-      <link rel="icon" type="image/x-icon" href="Силаэдр_фон.png">
+      <link rel="icon" type="image/x-icon" href="{% static 'images/Силаэдр_фон.png' %}">
    </head>
    <body>
       <h1> Расписание </h1>
@@ -46,15 +47,13 @@
          <section class="projects__section">
             <div class="projects__list">
                {% for project in projects %}
-               <a class="floating-button projects__item" id="{{project.id}}">
+               <div class="projects__item">
+               <a class="floating-button" id="{{project.id}}">
                  <img  src="{% static 'images/share.png' %}" class='image' onclick="alert('Оля гг')">
                     <img  src="{% static 'images/result.png' %}" class='image' onclick="del({{project.id}});">
 
                 </a>
-
-
-               <!-- {{project.id}} -->
-               <!-- <div></div> -->
+            </div>
                <script type="text/javascript">setName({{project.id}});</script>
                {% endfor %}
             </div>
@@ -104,13 +103,13 @@
               return nextElement;
             };
 
-            function positionChanged(id, position, new_position){
+            function positionChanged(position, new_position){
                 var http = new XMLHttpRequest();
-                var url = window.location.origin+"change";
-                var params = "id="+id+"&position="+position+"&new_position="+new_position;
-                http.open('GET', url+"?"+params, true);
+                var url = window.location.origin+"/change";
+                var params = "&position="+position+"&new_position="+new_position;
+                http.open('POST', url, true);
                 http.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
-                http.send(null);
+                http.send(params);
             }
 
             projectsListElement.addEventListener(`dragover`, (evt) => {
@@ -138,11 +137,14 @@
                     // Если нет, выходим из функции, чтобы избежать лишних изменений в DOM
                     return;
                   }
-                  console.log(activeElement.parentNode.innerHTML.indexOf(activeElement));
+                  // console.log(activeElement.parentNode.innerHTML.indexOf(activeElement));
                   // .indexOf(activeElement)
-                  console.log(nextElement);
-                  console.log()
-                  console.log("------------")
+                  if(nextElement.getElementsByClassName("floating-button").length > 0){
+
+                    positionChanged(activeElement.getElementsByClassName("floating-button")[0].getAttribute("id"), 
+                        nextElement.getElementsByClassName("floating-button")[0].getAttribute("id")-1)
+                    }
+                  
 
                   projectElements[0].parentNode.insertBefore(activeElement, nextElement);
             });
