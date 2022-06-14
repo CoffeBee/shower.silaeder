@@ -24,7 +24,10 @@
                            var response = http.responseText;
                            var jsonObject = JSON.parse(response);
                            var button = document.getElementById(id);
-                           button.innerHTML += jsonObject.autors+": "+jsonObject.name;
+                           var div =  document.createElement('div');
+                           div.setAttribute("class", "div_text");
+                           div.innerText = jsonObject.autors+": "+jsonObject.name;
+                           button.prepend(div);
                        }
                    }
                };
@@ -35,15 +38,21 @@
 
          }
       </script>
+      <div>
       <canvas class="rectangle2" id="myCanvas" style="border:3px solid #000000;"> </canvas>
       <canvas class="rectangle" id="myCanvas" style="border:3px solid #000000;"> </canvas>
+    </div>
       <div class="layer">
          <section class="projects__section">
             <div class="projects__list">
                {% for project in projects %}
                <a class="floating-button projects__item" id="{{project.id}}">
-                    <img  src="{% static 'images/result.png' %}" class='image' onclick="del({{project.id}});"> </a>
-               </a>
+                 <img  src="{% static 'images/share.png' %}" class='image' onclick="alert('Оля гг')">
+                    <img  src="{% static 'images/result.png' %}" class='image' onclick="del({{project.id}});">
+
+                </a>
+
+
                <!-- {{project.id}} -->
                <!-- <div></div> -->
                <script type="text/javascript">setName({{project.id}});</script>
