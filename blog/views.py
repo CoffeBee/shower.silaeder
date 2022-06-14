@@ -53,3 +53,5 @@ def change(request):
 def home(request):
     print(Project.objects.order_by("position"))
     return render(request, "blog/site.html", {"projects": Project.objects.order_by("position")})
+def view(request):
+    return XMLHttpRequest(status=200)

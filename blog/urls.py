@@ -10,5 +10,5 @@ urlpatterns = [
     #path('change_down',views.change_down, name='change_down'),
     path('change',views.change, name='change'),
     path("", views.home, name="homepage"),
-    path("view", views.home, name="viewer"),
+    path("view", views.view, name="viewer"),
 ]+ static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
