@@ -9,8 +9,10 @@ def add(request):
     return HttpResponse(status=200)
 
 def delete(request):
-    object = Project.objects.filter(id=int(request.POST['id']))
-    for el in Project.objects.filter(position_gt=object.position):
+    object = Project.objects.filter(id=int(request.POST['id']))[0]
+    print("-"*100)
+    print(Project.objects.filter(position__gt=object.position))
+    for el in Project.objects.filter(position__gt=object.position):
         el.position -= 1
     object.delete()
     return HttpResponse(status=200)

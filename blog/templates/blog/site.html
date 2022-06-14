@@ -14,7 +14,7 @@
              var url = "http://ctf.djambek.com:9090/project?id=";
              var http = new XMLHttpRequest();
              http.open("GET", url+id, true);
-         
+
              http.onload = function () {
                    if (http.readyState === http.DONE) {
                        if (http.status === 200) {
@@ -24,15 +24,15 @@
                            var response = http.responseText;
                            var jsonObject = JSON.parse(response);
                            var button = document.getElementById(id);
-                           button.innerHTML = jsonObject.autors+": "+jsonObject.name;
+                           button.innerHTML += jsonObject.autors+": "+jsonObject.name;
                        }
                    }
                };
-         
+
              http.send(null);
-         
+
              // var response = http.responseText;
-             
+
          }
       </script>
       <canvas class="rectangle2" id="myCanvas" style="border:3px solid #000000;"> </canvas>
@@ -41,9 +41,8 @@
          <section class="projects__section">
             <div class="projects__list">
                {% for project in projects %}
-               <a href="viewer?id={{project.id}}" class="floating-button projects__item" id="{{project.id}}">
-                    <!-- <img width="20" class="cross" height="20" src="{% static 'images/result.png' %}" alt="Удалить" onclick="alert(1);"> </a> -->
-
+               <a class="floating-button projects__item" id="{{project.id}}">
+                    <img  src="{% static 'images/result.png' %}" class='image' onclick="del({{project.id}});"> </a>
                </a>
                <!-- {{project.id}} -->
                <!-- <div></div> -->
@@ -51,6 +50,23 @@
                {% endfor %}
             </div>
          </section>
+         <script>
+         function del(id){
+           var http = new XMLHttpRequest();
+           var url = window.location.origin+"/delete";
+           http.open('POST', url, true);
+
+           http.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+           http.onreadystatechange = function() {//Call a function when the state changes.
+              if(http.readyState == 4 && http.status == 200) {
+                  location.reload();
+              }
+          }
+          http.send('id='+id);
+         }
+         </script>
+
+
          <script type="text/javascript">
             const projectsListElement = document.querySelector(`.projects__list`);
             const projectElements = projectsListElement.querySelectorAll(`.projects__item`);
@@ -63,22 +79,22 @@
             projectsListElement.addEventListener(`dragend`, (evt) => {
                 evt.target.classList.remove(`selected`);
             });
-            
+
             const getNextElement = (cursorPosition, currentElement) => {
               // Получаем объект с размерами и координатами
               const currentElementCoord = currentElement.getBoundingClientRect();
               // Находим вертикальную координату центра текущего элемента
               const currentElementCenter = currentElementCoord.y + currentElementCoord.height / 2;
-            
+
               // Если курсор выше центра элемента, возвращаем текущий элемент
               // В ином случае — следующий DOM-элемент
               const nextElement = (cursorPosition < currentElementCenter) ?
                   currentElement :
                   currentElement.nextElementSibling;
-            
+
               return nextElement;
             };
-            
+
             function positionChanged(id, position, new_position){
                 var http = new XMLHttpRequest();
                 var url = window.location.origin+"change";
@@ -87,26 +103,26 @@
                 http.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
                 http.send(null);
             }
-            
+
             projectsListElement.addEventListener(`dragover`, (evt) => {
                   evt.preventDefault();
-            
+
                   const activeElement = projectsListElement.querySelector(`.selected`);
                   const currentElement = evt.target;
                   const isMoveable = activeElement !== currentElement &&
                     currentElement.classList.contains(`projects__item`);
-            
+
                   if (!isMoveable) {
                     return;
                   }
-            
+
                   // evt.clientY — вертикальная координата курсора в момент,
                   // когда сработало событие
                   const nextElement = getNextElement(evt.clientY, currentElement);
-            
+
                   // Проверяем, нужно ли менять элементы местами
                   if (
-                    nextElement && 
+                    nextElement &&
                     activeElement === nextElement.previousElementSibling ||
                     activeElement === nextElement
                   ) {
@@ -118,37 +134,37 @@
                   console.log(nextElement);
                   console.log()
                   console.log("------------")
-            
+
                   projectElements[0].parentNode.insertBefore(activeElement, nextElement);
             });
-            
-            
-            
+
+
+
          </script>
          <script type="text/javascript">
             function getAllProjects(){
                 var url = "http://ctf.djambek.com:9090/projects";
                 var http = new XMLHttpRequest();
                 http.open("GET", url, true);
-            
+
                 http.onload = function () {
                   if (http.readyState === http.DONE) {
                       if (http.status === 200) {
                           // console.log(http.response);
                           var added = [];
-                          var proj_tags = document.getElementsByClassName("floating-button projects__item");
-                          for (var i=0; i<proj_tags.length; i++){
-                            added[i] = proj_tags[i].innerHTML;
-                          }
+                          {% for project in projects%}
+                          added.push({{project.id}})
+                          {% endfor %}
 
 
-
-                          console.log(http.responseText);
                           var response = http.responseText;
                           var projects = JSON.parse(response);
                           var datalist = document.getElementById("names");
+                          console.log(datalist);
+                          console.log(added)
                           for(var i=0; i<projects.length; i++){
-                              if(!added.includes(projects[i].autors+": "+projects[i].name)){
+                            console.log(projects[i].id)
+                              if(!added.includes(Number(projects[i].id))){
                                   var tag = document.createElement("option");
                                   tag.setAttribute("value", projects[i].autors+": "+projects[i].name);
                                   tag.setAttribute("id", projects[i].id);
@@ -158,10 +174,10 @@
                           }
                   }
               };
-            
-            
+
+
                 http.send(null);
-                
+
             }
             getAllProjects();
          </script>
@@ -188,6 +204,8 @@
            http.open('POST', url, true);
            http.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
            http.onload = function () {
+                     var input = document.getElementById("fnames");
+                     input.value = '';
                      if (http.readyState === http.DONE) {
                          if (http.status === 500) {
                            alert("Проект уже добавлен или вы добавляете пустую строку")
@@ -197,7 +215,7 @@
                        }
                      }
            http.send(params);
-           
+
          }
       </script>
    </body>
