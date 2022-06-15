@@ -1,6 +1,8 @@
 from django.shortcuts import render
 from .models import Project
 from django.http import HttpResponse
+from asgiref.sync import async_to_sync
+from channels.layers import get_channel_layer
 
 def add(request):
     print(int(request.POST['id']))
@@ -52,6 +54,13 @@ def change(request):
 def home(request):
     print(Project.objects.order_by("position"))
     return render(request, "blog/site.html", {"projects": Project.objects.order_by("position")})
-def view(request):
-    """Здесь будет отображение презентаций"""
+
+def show(request):
+    channel_layer = get_channel_layer()
+    async_to_sync(channel_layer.group_send)("chat", {
+        "type": "chat.message",
+        "text": request.POST['id']
+    })
     return HttpResponse(status=200)
+def view(request):
+    return render(request, 'blog/shower.html')

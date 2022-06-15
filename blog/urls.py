@@ -11,4 +11,6 @@ urlpatterns = [
     path('change',views.change, name='change'),
     path("", views.home, name="homepage"),
     path("view", views.view, name="viewer"),
+    path("show", views.show, name="show"),
+
 ]+ static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

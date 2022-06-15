@@ -64,7 +64,7 @@
          <script type="text/javascript">
             function share(id){
                 var http = new XMLHttpRequest();
-                var url = window.location.origin+"/view";
+                var url = window.location.origin+"/show";
                 http.open('POST', url, true);
                 http.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
                 http.send('id='+id);
