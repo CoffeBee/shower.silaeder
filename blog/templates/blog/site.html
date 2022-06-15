@@ -54,10 +54,13 @@
 
                 </a>
             </div>
-               <script type="text/javascript">setName({{project.id}});</script>
+               
                {% endfor %}
             </div>
          </section>
+         {% for project in projects%}
+            <script type="text/javascript">setName({{project.id}});</script>
+         {% endfor %}
          <script>
          function del(id){
            var http = new XMLHttpRequest();
@@ -77,14 +80,27 @@
 
          <script type="text/javascript">
             const projectsListElement = document.querySelector(`.projects__list`);
+            var before_position = -1;
             const projectElements = projectsListElement.querySelectorAll(`.projects__item`);
             for (const task of projectElements) {
                 task.draggable = true;
             }
             projectsListElement.addEventListener(`dragstart`, (evt) => {
+
                 evt.target.classList.add(`selected`);
+                    const activeElement = projectsListElement.querySelector(`.selected`);
+                    before_position = Array.from(activeElement.parentNode.children).indexOf(activeElement) + 1
+
+
             })
             projectsListElement.addEventListener(`dragend`, (evt) => {
+                const activeElement = projectsListElement.querySelector(`.selected`);
+                console.log("*************************** - c какой стартанули")
+                console.log(before_position);
+                console.log("*************************** - это куда мы будем вставить просто")
+                console.log(Array.from(activeElement.parentNode.children).indexOf(activeElement));
+                positionChanged(before_position, Array.from(activeElement.parentNode.children).indexOf(activeElement))
+
                 evt.target.classList.remove(`selected`);
             });
 
@@ -104,7 +120,7 @@
             };
 
             function positionChanged(position, new_position){
-                var http = new XMLHttpRequest();
+                var http = new XMLHttpRequest(); 
                 var url = window.location.origin+"/change";
                 var params = "&position="+position+"&new_position="+new_position;
                 http.open('POST', url, true);
@@ -139,11 +155,11 @@
                   }
                   // console.log(activeElement.parentNode.innerHTML.indexOf(activeElement));
                   // .indexOf(activeElement)
-                  if(nextElement.getElementsByClassName("floating-button").length > 0){
+                  // if(nextElement.getElementsByClassName("floating-button").length > 0){
 
-                    positionChanged(activeElement.getElementsByClassName("floating-button")[0].getAttribute("id"), 
-                        nextElement.getElementsByClassName("floating-button")[0].getAttribute("id")-1)
-                    }
+                  //   positionChanged(activeElement.getElementsByClassName("floating-button")[0].getAttribute("id"), 
+                  //       nextElement.getElementsByClassName("floating-button")[0].getAttribute("id")-1)
+                  //   }
                   
 
                   projectElements[0].parentNode.insertBefore(activeElement, nextElement);
