@@ -54,4 +54,4 @@ def home(request):
     return render(request, "blog/site.html", {"projects": Project.objects.order_by("position")})
 def view(request):
     """Здесь будет отображение презентаций"""
-    return XMLHttpRequest(status=200)
+    return HttpResponse(status=200)
