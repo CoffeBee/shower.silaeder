@@ -12,7 +12,7 @@
       <h1> Расписание </h1>
       <script type="text/javascript">
          function setName(id){
-             var url = "http://ctf.djambek.com:9090/project?id=";
+             var url = "http://192.168.0.187:8016/project/";
              var http = new XMLHttpRequest();
              http.open("GET", url+id, true);
 
@@ -179,7 +179,7 @@
          </script>
          <script type="text/javascript">
             function getAllProjects(){
-                var url = "http://ctf.djambek.com:9090/projects";
+                var url = "http://192.168.0.187:8016/projects";
                 var http = new XMLHttpRequest();
                 http.open("GET", url, true);
 
